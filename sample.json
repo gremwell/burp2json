@@ -1,0 +1,52 @@
+[
+    {
+        "method": "GET",
+        "path": "/api/item/$id",
+        "comment": "get item",
+        "data": "",
+        "params": {},
+        "headers": {}
+    },
+    {
+        "method": "GET",
+        "path": "/api/items",
+        "comment": "get all items",
+        "data": "",
+        "params": {},
+        "headers": {}
+    },
+    {
+        "method": "POST",
+        "path": "/api/items",
+        "comment": "add item",
+        "json": "{\"ccc\":\"ddd\"}",
+        "params": {},
+        "headers": {
+            "Content-type": "application/json"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "/api/search",
+        "comment": "search",
+        "data": "",
+        "params": {
+            "text": "ddd"
+        },
+        "headers": {}
+    },
+    {
+        "method": "POST",
+        "path": "/api/upload",
+        "comment": "upload",
+        "files": {
+            "file": [
+                "test.csv",
+                "eee,fff\nggg,hhhhhhh\n",
+                "application/octet-stream"
+            ]
+        },
+        "params": {},
+        "headers": {}
+    }
+]
