@@ -1,0 +1,30 @@
+[
+    {
+        "method": "GET",
+        "path": "/api/item/$id",
+        "comment": "get item",
+        "data": "",
+        "params": {},
+        "headers": {}
+    },
+    {
+        "method": "POST",
+        "path": "/api/items",
+        "comment": "add item",
+        "json": "{\"$name\":\"$value\"}",
+        "params": {},
+        "headers": {
+            "Content-type": "application/json"
+        }
+    },
+    {
+        "method": "GET",
+        "path": "/api/search",
+        "comment": "search",
+        "data": "",
+        "params": {
+            "text": "$text"
+        },
+        "headers": {}
+    }
+]

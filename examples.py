@@ -36,12 +36,19 @@ session.proxies.update(proxies)
 print("Running all requests through Burp, expecting it to listen on 127.0.0.1:8080")
 b2j.do_all(prefix="http://127.0.0.1:5000", handle_response=handle_response, session=session)
 
-print("Will execute a scenario. First do a search, read the response, then call foubd items one by one")
+print("Will execute a scenario. Create an item, do a search, read the response, then call found items one by one")
+
+b2j = burp2json.Burp2Json("parameterized.json")
+create = b2j.request_by_comment("add item")
+
+print("Creating a new item")
+resp = b2j.do_request(create, prefix="http://127.0.0.1:5000", session=session, json_params={"name":"bob", "value":"20"})
+print("Got response: stus coce {}, content {}".format(resp.status_code, resp.json()))
 
 search = b2j.request_by_path("GET","/api/search")
 
 print("Calling search")
-resp = b2j.do_request(search, prefix="http://127.0.0.1:5000", session=session, get_params={"text":"fff"})
+resp = b2j.do_request(search, prefix="http://127.0.0.1:5000", session=session, get_params={"text":"20"})
 print("Got response code: {}".format(resp.status_code))
 if(resp.status_code == 200) :
     j = resp.json()

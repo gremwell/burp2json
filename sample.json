@@ -1,7 +1,7 @@
 [
     {
         "method": "GET",
-        "path": "/api/item/$id",
+        "path": "/api/item/1",
         "comment": "get item",
         "data": "",
         "params": {},
