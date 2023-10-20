@@ -58,7 +58,7 @@ b2j.ssl_verify = true
 # Features
 
 1. Burp2Json supports any kind of HTTP verbs, and different kind of body content (i.e. url-encoded body paramters, multipart/form-data, JSON, XML, and arbitrary body data). Binary body data, particularly large blobs of binary data probably will not work very well, or not at all
-2. Requests can be customised by adding headers, cookies, query parameters, POST url-encoded paramters. If a header. cookie, query paramter or POST url-encoded parametr with the same name already exists in the JSON template it will be replaced. The tool does not support multiple paramters with the same name
+2. Requests can be customised by adding headers, cookies, query parameters, POST url-encoded parameters. If a header. cookie, query paramter or POST url-encoded parameter with the same name already exists in the JSON template it will be replaced. The tool does not support multiple paramters with the same name
 3. Requests can be customised by substituting values in JSON body and request path. To facilitate this, you need to create placeholders in JSON templates. See examples.py
 4. Burp2Json python module can use python requests session object. This allows using cookie-based sessions in multi-step scenarios and SSL client certificate authentication.
 5. do_request() method returns python requests response object. You can analyze all aspects of the response.
