@@ -16,7 +16,9 @@ pip install -e .
 # Using example code
 
 Run the sample web service
+
 Depending on your version of flask:
+
 Flask 2.0.x :
 ```
 > export FLASK_APP=sample_server
