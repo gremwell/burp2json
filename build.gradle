@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+version '1.0'
+
+configurations {
+	extraLibs
+}
+
+dependencies {
+    implementation 'net.portswigger.burp.extensions:montoya-api:+'
+    extraLibs 'com.google.code.gson:gson:+'
+    configurations.implementation.extendsFrom(configurations.extraLibs)
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '+'
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    from {
+        configurations.compileClasspath.filter{
+		it.exists() }.collect {
+			it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+repositories {
+	mavenCentral()
+}
