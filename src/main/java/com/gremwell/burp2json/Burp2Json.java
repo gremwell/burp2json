@@ -33,8 +33,8 @@ public class Burp2Json implements ContextMenuItemsProvider​, BurpExtension {
 	@Override
 	public void initialize(MontoyaApi api) {
 		this.api = api;
-		this.api.extension().setName("Burp2Python Requests");
-		this.api.logging().logToOutput("Burp2Python extension has been loaded.");
+		this.api.extension().setName("Burp2Json");
+		this.api.logging().logToOutput("Burp2Json extension has been loaded.");
 		this.api.userInterface().registerContextMenuItemsProvider(this);
 	}
 
@@ -51,7 +51,7 @@ public class Burp2Json implements ContextMenuItemsProvider​, BurpExtension {
 	@Override
 	public List<Component> provideMenuItems(ContextMenuEvent event) {
 		List<Component> items = new ArrayList<>();
-		String menuItemName = "Burp2Python - no requests selected";
+		String menuItemName = "Burp2Json - no requests selected";
 		/* Let's see if thre are any items selected in Target map */
 		List<HttpRequestResponse> rrs = new ArrayList<HttpRequestResponse>();
 		rrs.addAll(event.selectedRequestResponses());
@@ -66,13 +66,13 @@ public class Burp2Json implements ContextMenuItemsProvider​, BurpExtension {
 		}
 		if (rrs.size() > 0) {
 			generateCode(rrs);
-			menuItemName = "Burp2Python (" + rrs.size() + " request(s) selected) - generate";
+			menuItemName = "Burp2Json (" + rrs.size() + " request(s) selected) - generate";
 		} else {
 			api.logging().logToOutput("No requests/responses selected.");
 		}
 		items.add(new JMenuItem(menuItemName));
 
-		this.api.logging().logToOutput("Burp2Python: " + rrs.size() + " requests selected.");
+		this.api.logging().logToOutput("Burp2Json: " + rrs.size() + " requests selected.");
 		return items;
 	}
 
