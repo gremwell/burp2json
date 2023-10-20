@@ -48,7 +48,7 @@ Now read and run the example code
 
 # Security
 
-* Burp2Json disables SSL server certificate validation and warnings by default because this is what we generally want in test scenarios * . Do not use it in any kind of scenario where transport level security is important.
+*** Burp2Json disables SSL server certificate validation and warnings by default because this is what we generally want in test scenarios *** . Do not use it in any kind of scenario where transport level security is important.
 
 You can enable server certificate validation by doing:
 ```
