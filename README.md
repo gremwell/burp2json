@@ -7,6 +7,25 @@ Run
 ```gradle build```
 This will create a build/libs/Burp2Json-1.0.jar file. Open the Extensions tab in Burp and add this jar file as extension
 
+If you don't have graddle installed, can use dockerized gradle:
+```% docker run --rm -u gradle -v "$PWD":/home/gradle/project -w /home/gradle/project gradle gradle build
+Welcome to Gradle 8.4!
+...
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :compileJava
+> Task :processResources NO-SOURCE
+> Task :classes
+
+> Task :jar
+...
+
+BUILD SUCCESSFUL in 8s
+2 actionable tasks: 2 executed
+
+% ls -l build/libs/project-1.0.jar
+-rw-r--r--  1 abb  staff  823387 Oct 26 12:10 build/libs/project-1.0.jar
+```
+
 ## Installing python module
 
 Run once:
