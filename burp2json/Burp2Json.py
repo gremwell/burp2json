@@ -9,6 +9,9 @@ class Burp2Json:
         self._requests = json.load(open(filename, "r"))
         self._ssl_warnings = False
         self._ssl_verify = False
+        self._proxy = None
+        self._target = None
+        self._session = requests.Session()
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     @property
@@ -19,15 +22,39 @@ class Burp2Json:
     def ssl_verify(self, value):
         self._ssl_verify = value
 
+    @property
+    def proxy(self):
+        return self._proxy
+
+    @proxy.setter
+    def proxy(self, value):
+        self._proxy = value
+        self._session.proxies.update({"http": self._proxy, "https": self._proxy})
+
+    @property
+    def target(self):
+        return self._target
+
+    @target.setter
+    def target(self, value):
+        self._target = value
+
     def request_by_path(self, method, path):
         return [
             item
             for item in self._requests
             if (item["path"] == path and item["method"] == method)
         ][0]
+    
+    def do_request_by_path(self, method, path, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None):
+        return self.do_request(self.request_by_path(method, path), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files)
 
     def request_by_comment(self, comment):
         return [item for item in self._requests if (item["comment"] == comment)][0]
+    
+    def do_request_by_comment(self, comment, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None):    
+        return self.do_request(self.request_by_comment(comment), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files)
+    
 
     def get_all(self):
         return self._requests
@@ -35,7 +62,7 @@ class Burp2Json:
     def do_request(
         self,
         request,
-        prefix,
+        target = None,
         session=None,
         extra_cookies=None,
         extra_headers=None,
@@ -46,7 +73,11 @@ class Burp2Json:
         files=None,
     ):
         if session == None:
-            session = requests.Session()
+            session = self._session
+
+        if target == None:
+            target = self._target   
+
         my_req = request.copy()
 
         # Handle REST-style path parameters
@@ -96,7 +127,7 @@ class Burp2Json:
 
         return session.request(
             method=my_req["method"],
-            url=prefix + my_req["path"],
+            url=target + my_req["path"],
             params=my_req["params"],
             data=my_req["data"],
             json=my_req["json"],
@@ -107,7 +138,7 @@ class Burp2Json:
 
     def do_all(
         self,
-        prefix,
+        target = None,
         session=None,
         extra_cookies=None,
         extra_headers=None,
@@ -115,12 +146,13 @@ class Burp2Json:
         post_params=None,
         json_params=None,
         path_params=None,
-        files=None, handle_response = None
+        files=None,
+        handle_response=None,
     ):
         for req in self._requests:
             resp = self.do_request(
                 req,
-                prefix,
+                target,
                 session,
                 extra_cookies,
                 extra_headers,
@@ -130,5 +162,5 @@ class Burp2Json:
                 path_params,
                 files,
             )
-            if(handle_response != None) :
-                handle_response(req,resp)
+            if handle_response != None:
+                handle_response(req, resp)
