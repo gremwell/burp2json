@@ -5,8 +5,15 @@ import urllib3
 
 
 class Burp2Json:
-    def __init__(self, filename):
-        self._requests = json.load(open(filename, "r"))
+    def __init__(self, filename=None, json_string=None, data=None):
+        if filename != None:
+            self._requests = json_string.load(open(filename, "r"))
+        elif json_string != None:
+            self._requests = json_string.loads(json_string)
+        elif data != None:
+            self._requests = data
+        else:
+            self._requests = []
         self._ssl_warnings = False
         self._ssl_verify = False
         self._proxy = None
