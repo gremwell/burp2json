@@ -98,11 +98,17 @@ class Burp2Json:
 
         # add extra headers
         if extra_headers != None:
-            my_req["headers"] = extra_headers | request["headers"]
+            if "headers" in request:
+                my_req["headers"] = extra_headers | request["headers"]
+            else:
+                my_req["headers"] = extra_headers
 
         # handle get parameters
         if get_params != None:
-            my_req["params"] = request["params"] | get_params
+            if "params" in request:
+                my_req["params"] = request["params"] | get_params
+            else:
+                my_req["params"] = get_params
 
         # handle body data
         if post_params != None:
@@ -140,7 +146,8 @@ class Burp2Json:
             json=my_req["json"],
             headers=my_req["headers"],
             files=my_req["files"],
-            verify=self._ssl_verify,
+            verify=self._ssl_verify, 
+            allow_redirects=False
         )
 
     def do_all(
