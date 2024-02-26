@@ -178,3 +178,31 @@ class Burp2Json:
             )
             if handle_response != None:
                 handle_response(req, resp)
+
+    def do_selected_by_comment(self, selected,         target = None,
+        session=None,
+        extra_cookies=None,
+        extra_headers=None,
+        get_params=None,
+        post_params=None,
+        json_params=None,
+        path_params=None,
+        files=None,
+        handle_response=None,
+    ):
+        for req in self._requests:
+            if(req["comment"] in selected) :
+                resp = self.do_request(
+                req,
+                target,
+                session,
+                extra_cookies,
+                extra_headers,
+                get_params,
+                post_params,
+                json_params,
+                path_params,
+                files,
+                )
+                if handle_response != None:
+                    handle_response(req, resp) 
