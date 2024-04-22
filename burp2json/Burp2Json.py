@@ -5,7 +5,7 @@ import urllib3
 
 
 class Burp2Json:
-    def __init__(self, filename=None, json_string=None, data=None):
+    def __init__(self, filename=None, json_string=None, data=None, proxy = None, target = None):
         if filename != None:
             self._requests = json.load(open(filename, "r"))
         elif json_string != None:
@@ -16,9 +16,17 @@ class Burp2Json:
             self._requests = []
         self._ssl_warnings = False
         self._ssl_verify = False
-        self._proxy = None
-        self._target = None
         self._session = requests.Session()
+        if proxy != None:
+            self._proxy = proxy
+            self._session.proxies.update({"http": self._proxy, "https": self._proxy})
+        else:
+            self._proxy = None
+        if target != None:
+            self._target = target
+        else:
+            self._target = None
+
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     @property
@@ -78,6 +86,7 @@ class Burp2Json:
         json_params=None,
         path_params=None,
         files=None,
+        handle_response=None
     ):
         if session == None:
             session = self._session
@@ -179,7 +188,7 @@ class Burp2Json:
             if handle_response != None:
                 handle_response(req, resp)
 
-    def do_selected_by_comment(self, selected,         target = None,
+    def do_selected_by_comment(self, selected, target = None,
         session=None,
         extra_cookies=None,
         extra_headers=None,
@@ -190,19 +199,18 @@ class Burp2Json:
         files=None,
         handle_response=None,
     ):
-        for req in self._requests:
-            if(req["comment"] in selected) :
-                resp = self.do_request(
-                req,
-                target,
-                session,
-                extra_cookies,
-                extra_headers,
-                get_params,
-                post_params,
-                json_params,
-                path_params,
-                files,
+        for comment in selected:
+                resp = self.do_request_by_comment(
+                comment=comment,
+                target=target,
+                session=session,
+                extra_cookies=extra_cookies,
+                extra_headers=extra_headers,
+                get_params=get_params,
+                post_params=post_params,
+                json_params=json_params,
+                path_params=path_params,
+                files=files
                 )
                 if handle_response != None:
-                    handle_response(req, resp) 
+                    handle_response(self.request_by_comment(comment), resp) 
