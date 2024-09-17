@@ -61,14 +61,14 @@ class Burp2Json:
             if (item["path"] == path and item["method"] == method)
         ][0]
     
-    def do_request_by_path(self, method, path, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None):
-        return self.do_request(self.request_by_path(method, path), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files)
+    def do_request_by_path(self, method, path, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None, handle_response=None):
+        return self.do_request(self.request_by_path(method, path), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files, handle_response)
 
     def request_by_comment(self, comment):
         return [item for item in self._requests if (item["comment"] == comment)][0]
     
-    def do_request_by_comment(self, comment, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None):    
-        return self.do_request(self.request_by_comment(comment), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files)
+    def do_request_by_comment(self, comment, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None, handle_response=None):    
+        return self.do_request(self.request_by_comment(comment), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files, handle_response)
     
 
     def get_all(self):
@@ -147,7 +147,7 @@ class Burp2Json:
             if not (name in my_req):
                 my_req[name] = None
 
-        return session.request(
+        resp = session.request(
             method=my_req["method"],
             url=target + my_req["path"],
             params=my_req["params"],
@@ -158,6 +158,9 @@ class Burp2Json:
             verify=self._ssl_verify, 
             allow_redirects=False
         )
+        if handle_response != None:
+            handle_response(my_req, resp)
+        return resp
 
     def do_all(
         self,
@@ -184,9 +187,8 @@ class Burp2Json:
                 json_params,
                 path_params,
                 files,
+                handle_response
             )
-            if handle_response != None:
-                handle_response(req, resp)
 
     def do_selected_by_comment(self, selected, target = None,
         session=None,
