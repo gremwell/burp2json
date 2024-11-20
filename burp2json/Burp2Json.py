@@ -61,15 +61,14 @@ class Burp2Json:
             if (item["path"] == path and item["method"] == method)
         ][0]
     
-    def do_request_by_path(self, method, path, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None, handle_response=None, allow_redirects=False):
-        return self.do_request(self.request_by_path(method, path), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files, handle_response, allow_redirects)
+    def do_request_by_path(self, method, path, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None, handle_response=None,handle_response_data=None, allow_redirects=False):
+        return self.do_request(self.request_by_path(method, path), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files, handle_response, handle_response_data, allow_redirects)
 
     def request_by_comment(self, comment):
         return [item for item in self._requests if (item["comment"] == comment)][0]
     
-    def do_request_by_comment(self, comment, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None, handle_response=None, allow_redirects=False):    
-        return self.do_request(self.request_by_comment(comment), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files, handle_response, allow_redirects)
-    
+    def do_request_by_comment(self, comment, target = None, session=None, extra_cookies=None, extra_headers=None, get_params=None, post_params=None, json_params=None, path_params=None, files=None, handle_response=None, handle_response_data=None, allow_redirects=False):    
+        return self.do_request(self.request_by_comment(comment), target, session, extra_cookies, extra_headers, get_params, post_params, json_params, path_params, files, handle_response, handle_response_data, allow_redirects)
 
     def get_all(self):
         return self._requests
@@ -87,6 +86,7 @@ class Burp2Json:
         path_params=None,
         files=None,
         handle_response=None,
+        handle_response_data=None,
         allow_redirects=False
     ):
         if session == None:
@@ -160,7 +160,7 @@ class Burp2Json:
             allow_redirects=allow_redirects
         )
         if handle_response != None:
-            handle_response(my_req, resp)
+            handle_response(my_req, resp, handle_response_data)
         return resp
 
     def do_all(
@@ -175,6 +175,7 @@ class Burp2Json:
         path_params=None,
         files=None,
         handle_response=None,
+        handle_response_data=None,
         allow_redirects=False
     ):
         for req in self._requests:
@@ -190,6 +191,7 @@ class Burp2Json:
                 path_params,
                 files,
                 handle_response,
+                handle_response_data,
                 allow_redirects
             )
 
@@ -203,6 +205,7 @@ class Burp2Json:
         path_params=None,
         files=None,
         handle_response=None,
+        handle_response_data=None,
         allow_redirects=False
     ):
         for comment in selected:
@@ -220,4 +223,4 @@ class Burp2Json:
                 allow_redirects=allow_redirects
                 )
                 if handle_response != None:
-                    handle_response(self.request_by_comment(comment), resp) 
+                    handle_response(self.request_by_comment(comment), resp, handle_response_data) 
