@@ -108,17 +108,12 @@ class Burp2Json:
 
         # add extra headers
         if extra_headers != None:
-            if "headers" in request:
-                my_req["headers"] = extra_headers | request["headers"]
-            else:
-                my_req["headers"] = extra_headers
+            # This method of merging dicts should work with python 3.6 and later
+            my_req["headers"] = {**(request["headers"] or {}), **(extra_headers or {})}
 
         # handle get parameters
         if get_params != None:
-            if "params" in request:
-                my_req["params"] = request["params"] | get_params
-            else:
-                my_req["params"] = get_params
+            my_req["params"] = {**(request["params"] or {}), **(get_params or {})}          
 
         # handle body data
         if post_params != None:
