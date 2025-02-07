@@ -30,6 +30,14 @@ class Burp2Json:
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     @property
+    def session(self):
+        return self._session
+    
+    @session.setter
+    def session(self, value):
+        self._session = value
+
+    @property
     def ssl_verify(self):
         return self._ssl_verify
 
