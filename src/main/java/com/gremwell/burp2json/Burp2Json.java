@@ -65,11 +65,14 @@ public class Burp2Json implements ContextMenuItemsProvider​, BurpExtension {
 			api.logging().logToOutput(rrs.size() + " request(s) selected");
 		}
 		if (rrs.size() > 0) {
-			generateCode(rrs);
 			menuItemName = "Burp2Json (" + rrs.size() + " request(s) selected) - generate";
 		} else {
 			api.logging().logToOutput("No requests/responses selected.");
 		}
+		JMenuItem menuItem = new JMenuItem(menuItemName); 
+		menuItem.addActionListener(e -> {
+            generateCode(rrs);
+        });
 		items.add(new JMenuItem(menuItemName));
 
 		this.api.logging().logToOutput("Burp2Json: " + rrs.size() + " requests selected.");
