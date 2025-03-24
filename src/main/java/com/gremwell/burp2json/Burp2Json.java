@@ -73,7 +73,7 @@ public class Burp2Json implements ContextMenuItemsProvider​, BurpExtension {
 		menuItem.addActionListener(e -> {
             generateCode(rrs);
         });
-		items.add(new JMenuItem(menuItemName));
+		items.add(menuItem);
 
 		this.api.logging().logToOutput("Burp2Json: " + rrs.size() + " requests selected.");
 		return items;
