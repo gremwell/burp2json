@@ -227,3 +227,8 @@ class Burp2Json:
                 )
                 if handle_response != None:
                     handle_response(self.request_by_comment(comment), resp, handle_response_data) 
+
+
+# simple handle_reqsponse function for common use
+def handle_response(req, resp, data):
+    print(f'{req["comment"]}, {req["method"]}, {req["path"]}, {resp.status_code}, {resp.reason}')
