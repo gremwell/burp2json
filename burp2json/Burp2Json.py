@@ -173,19 +173,7 @@ class Burp2Json:
             prepared.headers['Connection'] = 'close' # Force closing connection to push the data through
 
         resp = session.send(prepared, verify=self._ssl_verify, allow_redirects=allow_redirects, stream=False)
-        '''
-        resp = session.request(
-            method=my_req["method"],
-            url=target + my_req["path"],
-            params=my_req["params"],
-            data=my_req["data"],
-            json=my_req["json"],
-            headers=my_req["headers"],
-            files=my_req["files"],
-            verify=self._ssl_verify, 
-            allow_redirects=allow_redirects
-        )
-        '''
+
         if handle_response != None:
             handle_response(my_req, resp, handle_response_data)
         return resp
@@ -203,24 +191,31 @@ class Burp2Json:
         files=None,
         handle_response=None,
         handle_response_data=None,
-        allow_redirects=False
+        allow_redirects=False,
+        skip_key_errors=False
     ):
         for req in self._requests:
-            resp = self.do_request(
-                req,
-                target,
-                session,
-                extra_cookies,
-                extra_headers,
-                get_params,
-                post_params,
-                json_params,
-                path_params,
-                files,
-                handle_response,
-                handle_response_data,
-                allow_redirects
-            )
+            try:
+                resp = self.do_request(
+                    req,
+                    target,
+                    session,
+                    extra_cookies,
+                    extra_headers,
+                    get_params,
+                    post_params,
+                    json_params,
+                    path_params,
+                    files,
+                    handle_response,
+                    handle_response_data,
+                    allow_redirects
+                )
+            except KeyError as e:
+                if skip_key_errors:
+                    next
+                else:
+                    raise e
 
     def do_selected_by_comment(self, selected, target = None,
         session=None,
@@ -233,9 +228,11 @@ class Burp2Json:
         files=None,
         handle_response=None,
         handle_response_data=None,
-        allow_redirects=False
+        allow_redirects=False,
+        skip_key_errors=False
     ):
         for comment in selected:
+            try:
                 resp = self.do_request_by_comment(
                 comment=comment,
                 target=target,
@@ -251,6 +248,11 @@ class Burp2Json:
                 )
                 if handle_response != None:
                     handle_response(self.request_by_comment(comment), resp, handle_response_data) 
+            except KeyError as e:
+                if skip_key_errors:
+                    next
+                else:
+                    raise e
 
 
 # simple handle_reqsponse function for common use
