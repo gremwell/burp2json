@@ -151,6 +151,29 @@ class Burp2Json:
             if not (name in my_req):
                 my_req[name] = None
 
+        rr = requests.Request(method=my_req["method"],
+            url=target + my_req["path"],
+            params=my_req["params"],
+            data=my_req["data"],
+            json=my_req["json"],
+            headers=my_req["headers"],
+            files=my_req["files"])
+        
+        prepared = session.prepare_request(rr)
+
+        # Workaround for DELETE requests with JSON data in the body, 
+        # as requests library does not support this well.
+        # If you still observe timeouts when sending DELETE requests with JSON body through Burp
+        # try configuring disabling HTTP/2 in Burp settings 
+        # If this doesn't help, try running your script without Burp proxy
+
+        if my_req["method"].upper() == "DELETE" and my_req["json"] != None:
+            prepared.body = json.dumps(my_req["json"]).encode('utf-8')
+            prepared.headers['Content-Length'] = str(len(prepared.body))
+            prepared.headers['Connection'] = 'close' # Force closing connection to push the data through
+
+        resp = session.send(prepared, verify=self._ssl_verify, allow_redirects=allow_redirects, stream=False)
+        '''
         resp = session.request(
             method=my_req["method"],
             url=target + my_req["path"],
@@ -162,6 +185,7 @@ class Burp2Json:
             verify=self._ssl_verify, 
             allow_redirects=allow_redirects
         )
+        '''
         if handle_response != None:
             handle_response(my_req, resp, handle_response_data)
         return resp
