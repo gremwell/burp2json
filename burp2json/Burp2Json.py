@@ -5,7 +5,7 @@ import urllib3
 
 
 class Burp2Json:
-    def __init__(self, filename=None, json_string=None, data=None, proxy = None, target = None):
+    def __init__(self, filename=None, json_string=None, data=None, proxy = None, target = None, certificate=None, allow_proxy_with_certificate=False):
         if filename != None:
             self._requests = json.load(open(filename, "r"))
         elif json_string != None:
@@ -26,6 +26,15 @@ class Burp2Json:
             self._target = target
         else:
             self._target = None
+        if certificate != None:
+            if self._proxy != None and not allow_proxy_with_certificate:
+                raise ValueError(
+                    "Client certificate is used together with a proxy. If the proxy terminates SSL "
+                    "(e.g. Burp), the certificate will not reach the target. Configure the client "
+                    "certificate in the proxy instead, or pass allow_proxy_with_certificate=True "
+                    "if the proxy tunnels SSL."
+                )
+            self._session.cert = certificate
 
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
